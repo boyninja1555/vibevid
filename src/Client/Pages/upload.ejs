@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Upload Video - VibeVid</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="" />
+</head>
+<body>
+    <main>
+        <section id="main">
+            <div class="container">
+                <h1>Upload video to VibeVid</h1>
+
+                <form action="/upload" method="post">
+                    <input type="text" name="Title" placeholder="Enter the title of your video..." />
+                    <textarea name="Description" placeholder="Enter the description of your video..."></textarea>
+                    <input type="text" name="Tags" placeholder="Enter the tags of your video..." />
+                    <input type="file" name="Video" accept="video/mp4" value="null" />
+                    <input type="file" name="Thumbnail" value="image/jpg" value="null" />
+                    <input type="submit" value="Upload" />
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

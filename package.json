@@ -1,0 +1,28 @@
+{
+  "name": "vibevid",
+  "version": "1.0.0",
+  "description": "N/A",
+  "main": "src/Server/server.js",
+  "scripts": {
+    "start": "node src/Server/server.js",
+    "dev": "nodemon src/Server/server"
+  },
+  "keywords": [
+    "video",
+    "sharing",
+    "site",
+    "video-sharing-site"
+  ],
+  "author": "Grant Weadon",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "msnodesqlv8": "^4.2.1",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>VibeVid</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="" />
+</head>
+<body>
+    <main>
+        <section id="main">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Welcome to VibeVid!</h1>
+
+                        <div class="video-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        fetchVideos()
+
+        async function fetchVideos() {
+            const response = await fetch("/api/videos/null")
+            const data = JSON.parse(await response.text())
+
+            const videoListElem = document.querySelector(".video-list")
+
+            data.forEach(video => {
+                const videoElem = document.createElement("div")
+                videoElem.classList.add("video")
+                videoElem.innerHTML = `
+                    <a href="/watch?v=${video.ID}">
+                        <img src="${video.ThumbnailP.replace("Data/", "")}" alt="${video.Title}" />
+                        <h2>${video.Title}</h2>
+                    </a>
+                `
+                videoListElem.appendChild(videoElem)
+            })
+        }
+    </script>
+</body>
+</html>

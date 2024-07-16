@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>|:|video_title|:| - VibeVid</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/video_player.css" />
+    <script src="https://kit.fontawesome.com/d459108c31.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <main>
+        <section id="main">
+            <div class="container">
+                <div class="video">
+                    <video id="video-player">
+                        <source src="/api/mp4/|:|video_id|:|" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <div class="video-controls">
+                        <button id="play-pause-btn" class="video-widget btn" title="Play/Pause Video">
+                            <i class="fa fa-play"></i>
+                        </button>
+                        
+                        <input type="range" id="volume-slider" class="video-widget" min="0" max="1" step="0.01" value="1" />
+                        
+                        <button id="full-screen-btn" class="video-widget btn" title="Toggle Full Screen">
+                            <i class="fa fa-expand"></i>
+                        </button>
+                        
+                        <button id="prev-btn" class="video-widget btn" title="Previous Video">
+                            <i class="fa fa-step-backward"></i>
+                        </button>
+                        
+                        <button id="next-btn" class="video-widget btn" title="Next Video">
+                            <i class="fa fa-step-forward"></i>
+                        </button>
+                        
+                        <button id="share-btn" class="video-widget btn" title="Share Video">
+                            <i class="fa fa-share"></i>
+                        </button>
+
+                        <button id="download-btn" class="video-widget btn" title="Download Video">
+                            <i class="fa fa-download"></i>
+                        </button>
+                        
+                        <div class="progress-bar video-widget">
+                            <div id="progress-bar-fill"></div>
+                        </div>
+                        
+                        <div class="time-display video-widget">
+                            <span id="current-time"></span> / <span id="total-time"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="videoData">
+                    <h2>|:|video_title|:|</h2>
+
+                    <p>|:|video_description|:|</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search)
+        const videoId = urlParams.get("v")
+
+        fetch(`/api/video/${videoId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+
+            const htmlVariables = {
+                video_id: videoId,
+                video_title: data.Title,
+                video_description: data.Description
+            }
+
+            for (const htmlVariable in htmlVariables) {
+                const variableKey = htmlVariable
+                const variableValue = htmlVariables[htmlVariable]
+
+                document.head.innerHTML = document.head.innerHTML.replace(`|:|${variableKey}|:|`, variableValue)
+                document.body.innerHTML = document.body.innerHTML.replace(`|:|${variableKey}|:|`, variableValue)
+            }
+
+            setupVideoPlayer()
+        })
+
+        function setupVideoPlayer() {
+            const video = document.getElementById("video-player")
+            const progressBarFill = document.getElementById("progress-bar-fill")
+            const currentTimeDisplay = document.getElementById("current-time")
+            const totalTimeDisplay = document.getElementById("total-time")
+            const playPauseBtn = document.getElementById("play-pause-btn")
+            const volumeSlider = document.getElementById("volume-slider")
+            const fullScreenBtn = document.getElementById("full-screen-btn")
+            const prevBtn = document.getElementById("prev-btn")
+            const nextBtn = document.getElementById("next-btn")
+            const shareBtn = document.getElementById("share-btn")
+            const downloadBtn = document.getElementById("download-btn")
+
+            let isPlaying = false
+
+            function updateProgressBar() {
+                const currentTime = video.currentTime
+                const progress = (currentTime / video.duration) * 100
+                progressBarFill.style.width = `${progress}%`
+                currentTimeDisplay.textContent = formatTime(currentTime)
+            }
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60)
+                const remainingSeconds = Math.floor(seconds % 60)
+                return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
+            }
+
+            video.addEventListener("loadedmetadata", () => {
+                totalTimeDisplay.textContent = formatTime(video.duration)
+            })
+
+            video.addEventListener("timeupdate", updateProgressBar)
+
+            playPauseBtn.addEventListener("click", (e) => {
+                e.preventDefault()
+                pauseOrPlayVideo()
+            })
+
+            volumeSlider.addEventListener("input", () => {
+                video.volume = volumeSlider.value
+            })
+
+            fullScreenBtn.addEventListener("click", () => {
+                if (!document.fullscreenElement) {
+                    video.requestFullscreen()
+                } else {
+                    document.exitFullscreen()
+                }
+            })
+
+            prevBtn.addEventListener("click", () => {
+                // Handle previous video logic
+            })
+
+            nextBtn.addEventListener("click", () => {
+                // Handle next video logic
+            })
+
+            shareBtn.addEventListener("click", () => {
+                // Handle sharing video logic
+            })
+
+            downloadBtn.addEventListener("click", () => {
+                // Handle downloading video logic
+            })
+
+            function handleKeydown(event) {
+                if (event.key === " ") {
+                    playPauseBtn.click()
+                } else if (event.key === "ArrowLeft") {
+                    prevBtn.click()
+                } else if (event.key === "ArrowRight") {
+                    nextBtn.click()
+                } else if (event.key === "ArrowUp") {
+                    volumeSlider.value = Math.min(parseFloat(volumeSlider.value) + 0.1, 1)
+                } else if (event.key === "ArrowDown") {
+                    volumeSlider.value = Math.max(parseFloat(volumeSlider.value) - 0.1, 0)
+                }
+            }
+
+            document.addEventListener("keydown", handleKeydown)
+
+            document.addEventListener("fullscreenchange", () => {
+                if (!document.fullscreenElement) {
+                    fullScreenBtn.classList.remove("fa-compress")
+                    fullScreenBtn.classList.add("fa-expand")
+                } else {
+                    fullScreenBtn.classList.remove("fa-expand")
+                    fullScreenBtn.classList.add("fa-compress")
+                }
+            })
+
+            video.addEventListener("ended", () => {
+                nextBtn.click()
+            })
+
+            function pauseOrPlayVideo() {
+                if (isPlaying) {
+                    video.pause()
+                    playPauseBtn.querySelector("i").classList.remove("fa-pause")
+                    playPauseBtn.querySelector("i").classList.add("fa-play")
+                    isPlaying = false
+                } else {
+                    video.play()
+                    playPauseBtn.querySelector("i").classList.remove("fa-play")
+                    playPauseBtn.querySelector("i").classList.add("fa-pause")
+                    isPlaying = true
+                }
+            }
+        }
+    </script>
+</body>
+</html>
